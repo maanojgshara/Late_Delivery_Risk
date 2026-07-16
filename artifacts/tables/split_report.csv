@@ -1,4 +1,0 @@
-subset,n_rows,positive_rate
-full,150000,0.1097
-train,120000,0.1097
-test,30000,0.1097

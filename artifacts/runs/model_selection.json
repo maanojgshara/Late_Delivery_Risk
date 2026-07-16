@@ -1,6 +1,0 @@
-{
-  "chosen_model": "hist_gbm",
-  "reason": "highest test PR-AUC; recall and Brier tie-breakers given FN cost + calibration",
-  "threshold": 0.17,
-  "threshold_policy": "cost-aware (FN:FP = 5.0:1); primary use is ranking by risk x impact"
-}

@@ -1,4 +1,0 @@
-model,brier_uncalibrated,brier_calibrated,threshold
-logreg,0.2088,0.09,0.15
-random_forest,0.1571,0.0903,0.16
-hist_gbm,0.2017,0.0899,0.17

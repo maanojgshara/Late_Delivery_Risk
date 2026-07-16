@@ -1,6 +1,0 @@
-17:01:34 | INFO | Loading model: models\final_model.joblib
-17:01:34 | INFO | Reading SQLite input: data/delivery.db (table=deliveries)
-17:01:34 | INFO | Loaded tables ['deliveries', 'feedback'] from data/delivery.db
-17:01:36 | INFO | Decision threshold=0.17 | per-segment=yes
-17:01:36 | INFO | Applied per-segment thresholds for the at-risk flag.
-17:01:36 | INFO | Scored 150,000 deliveries | flagged at-risk: 30359 -> artifacts/tables/predictions.csv
