@@ -1,0 +1,10 @@
+# Folders
+data/
+__pycache__/
+
+# Cache python files
+*.pyc
+*.pyo
+
+# Databases
+*.db

@@ -1,0 +1,10 @@
+{
+  "model": "random_forest",
+  "best_params": {
+    "clf__n_estimators": 200,
+    "clf__min_samples_leaf": 20,
+    "clf__max_features": "sqrt",
+    "clf__max_depth": 30
+  },
+  "best_cv_pr_auc": 0.25439393122701603
+}

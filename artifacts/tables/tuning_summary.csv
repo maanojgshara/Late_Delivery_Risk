@@ -1,0 +1,4 @@
+model,best_cv_PR_AUC,clf__C,clf__n_estimators,clf__min_samples_leaf,clf__max_features,clf__max_depth,clf__max_leaf_nodes,clf__max_iter,clf__learning_rate,clf__l2_regularization
+logreg,0.255,0.01,,,,,,,,
+random_forest,0.2544,,200.0,20.0,sqrt,30.0,,,,
+hist_gbm,0.2586,,,20.0,,,31.0,400.0,0.05,1.0

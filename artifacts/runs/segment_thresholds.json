@@ -1,0 +1,10 @@
+{
+  "model": "hist_gbm",
+  "global_threshold": 0.17,
+  "segment_thresholds": {
+    "standard": 0.17,
+    "express": 0.17,
+    "premium": 0.17,
+    "vip": 0.16
+  }
+}

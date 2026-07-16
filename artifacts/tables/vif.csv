@@ -1,0 +1,15 @@
+,VIF
+stops_x_distance,9.09
+distance_km,5.98
+driver_experience_months,4.42
+exp_per_stop,4.32
+num_stops_on_route,4.02
+value_per_kg,2.08
+parcel_value_sgd,2.04
+route_load_per_exp,1.63
+delivery_priority_rank,1.18
+pickup_hour,1.13
+parcel_weight_kg,1.09
+parcel_handling_sensitivity,1.01
+pickup_month,1.0
+pickup_day,1.0

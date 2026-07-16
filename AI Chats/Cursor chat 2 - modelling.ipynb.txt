@@ -1,0 +1,104 @@
+Transcript: Cursor chat 2 - modelling.ipynb (ASK mode; tags stripped; AI text only)
+
+================================================================================
+
+[User]
+c:\Users\maano\Downloads\AIAP 24\modelling.ipynb 
+
+Why is there an error when cell 42 is run
+
+--------------------------------------------------------------------------------
+
+[AI]
+I'll take a look at the notebook to understand the error in cell 42.
+
+ I need to examine cell 42 in the notebook to see what's causing the error.
+
+The error isn't really caused by cell 42 itself — it's a knock‑on effect of the cell just above it failing.
+
+## What's actually happening
+
+Cell 41 is the one that fails first:
+
+```41:41:c:\Users\maano\Downloads\AIAP 24\modelling.ipynb
+Xtr_tree = tree_preprocessor.fit_transform(X_train, y_train)
+```
+
+It raises:
+
+```
+TypeError: boolean value of NA is ambiguous
+```
+
+Because that line throws, the variable `Xtr_tree` never gets created. So when you then run cell 42:
+
+```42:42:c:\Users\maano\Downloads\AIAP 24\modelling.ipynb
+print(f"Tree-model design matrix: {Xtr_tree.shape}  "
+      f"(from {len(ALL_FEATURES)} raw features)")
+```
+
+…it fails too (with a `NameError: name 'Xtr_tree' is not defined`, since the previous cell never produced it). To fix cell 42, you actually have to fix cell 41.
+
+## Root cause of the real error (cell 41)
+
+The traceback points into the `OneHotEncoder` while it computes unique categories:
+
+```
+File ...sklearn/utils/_encode.py:177, in _unique_python(...)
+--> 177 uniques = sorted(uniques_set)
+...
+File pandas/_libs/missing.pyx:415, in pandas._libs.missing.NAType.__bool__()
+TypeError: boolean value of NA is ambiguous
+```
+
+The problem is the **dtype of the categorical columns combined with missing values**.
+
+In `make_xy`, the nominal and high-cardinality columns are cast to pandas' nullable `"string"` dtype:
+
+```106:107:c:\Users\maano\Downloads\AIAP 24\modelling.ipynb
+    for c in NOMINAL_FEATURES + HIGHCARD_FEATURES:
+        X[c] = X[c].astype("string")
+```
+
+That dtype uses `pd.NA` (not `np.nan`) for missing values. And several of these columns *do* contain missing values — from cell 14:
+
+- `vehicle_type` → 6087 missing
+- `payment_method` → 6003 missing
+- `recipient_postal_code` → 5909 missing
+
+In `build_tree_preprocessor`, the `nom` and `high` branches feed those columns straight into a `OneHotEncoder`/`TargetEncoder` with **no imputer in front**:
+
+```48:53:c:\Users\maano\Downloads\AIAP 24\modelling.ipynb
+    return ColumnTransformer([
+        ("num",  SimpleImputer(strategy="median"), TREE_NUMERIC),
+        ("bin",  "passthrough",                    BINARY_FEATURES),
+        ("nom",  make_nominal_encoder(),           NOMINAL_FEATURES),
+        ("high", make_highcard_encoder(),          HIGHCARD_FEATURES),
+    ])
+```
+
+When `OneHotEncoder` tries to build the sorted list of unique categories, the set of values contains `pd.NA` mixed with strings. `sorted(...)` has to compare elements, and any truth-test on `pd.NA` raises `boolean value of NA is ambiguous`. sklearn knows how to treat `np.nan`/`None` in object arrays as "missing", but pandas' `StringDtype` `pd.NA` trips it up.
+
+## Why the linear preprocessor (cell 46) doesn't hit this
+
+Note cell 46 uses the *same* `make_nominal_encoder()` / `make_highcard_encoder()` on the same columns, so it would fail for the same reason — it just never executes because the kernel stops at the error in cell 41.
+
+## How you'd fix it (conceptually — I'm in Ask mode, so not editing)
+
+Any of these would resolve it:
+
+1. **Convert the categoricals to object dtype with `np.nan`** instead of `pd.NA`, e.g. in `make_xy` use `.astype(object)` (or `.astype("string").astype(object)`), so sklearn recognizes the missing marker. This is the smallest change.
+2. **Add a categorical imputer before the encoder** in both preprocessors, e.g. wrap the nominal/high-card branches in a `Pipeline([("impute", SimpleImputer(strategy="most_frequent" or strategy="constant", fill_value="missing")), ("enc", make_nominal_encoder())])`. This is the cleaner, more defensible approach since it explicitly handles missing categories.
+3. Fill the NAs (e.g. with a `"missing"` literal) inside `make_xy` before encoding.
+
+Option 2 is generally the best fit for this pipeline, since it keeps missing-value handling inside the `ColumnTransformer` so it's refit per CV fold and applied consistently to test/production data.
+
+ Looking at the error, cell 41 is where `Xtr_tree` gets created through the `fit_transform` call, but that's failing. Cell 42 then tries to use `Xtr_tree` in a print statement, which fails because the variable was never successfully assigned in the first place.
+
+The root cause is a `TypeError: boolean value of NA is ambiguous` happening in OneHotEncoder when it tries to sort unique values. The nominal and high-cardinality features like `vehicle_type`, `payment_method`, and `recipient_postal_code` are stored as pandas StringDtype with pd.NA for missing values. When OneHotEncoder attempts to sort these unique values, it can't compare pd.NA with strings, causing the ambiguity error.
+
+The fix would be to either convert these columns to numpy object dtype with np.nan instead of pandas StringDtype, impute the missing values before encoding, or handle the NA values differently before passing them to OneHotEncoder.
+
+Looking at the data, the nominal features (vehicle_type, payment_method) and high-cardinality features (recipient_postal_code) all contain missing values, and when the preprocessor tries to fit the OneHotEncoder on these columns with pd.NA from StringDtype, it fails during the sorting step. The issue is that OneHotEncoder can handle np.nan in object arrays as a category, but pd.NA from pandas nullable string dtype breaks the comparison logic.
+
+--------------------------------------------------------------------------------

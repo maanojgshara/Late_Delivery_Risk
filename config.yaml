@@ -1,0 +1,70 @@
+# ============================================================================
+# MoveEasy late-delivery risk pipeline - central configuration.
+# Everything tunable lives here so experiments need no code changes.
+# Override any top-level key from the CLI, e.g.:  python -m src.main --search-n-iter 40
+# ============================================================================
+
+# --- reproducibility & target ---
+random_state: 42
+target: is_late
+
+# --- data ingestion (SQLite; downloaded if missing) ---
+data:
+  url: "https://techassessment.blob.core.windows.net/aiap24-assessment-data/delivery.db"
+  db_path: "data/delivery.db"          # relative path required by the spec
+  deliveries_table: "deliveries"
+
+# --- output locations ---
+paths:
+  models_dir: "models"
+  artifact_dir: "artifacts"
+
+# --- split & validation ---
+test_size: 0.20
+cv_folds: 5
+
+# --- preprocessing (model-type-aware; consistent with the EDA) ---
+corr_threshold: 0.85                   # |Spearman| pair flag (linear multicollinearity)
+vif_threshold: 10.0                    # VIF drop threshold (linear only)
+ohe_min_frequency: 0.01                # collapse <1% nominal levels
+
+# --- hyperparameter search ---
+search_n_iter: 20                      # RandomizedSearch candidates per model
+search_cv: 3                           # CV folds during search (speed)
+
+# --- calibration & thresholding ---
+calib_method: "isotonic"
+fn_fp_cost_ratio: 5.0                  # a missed late delivery (FN) costs ~5x a false alarm (FP)
+
+# --- optional per-tier decision thresholds (enable with CLI flag --per-segment-threshold) ---
+segment_threshold_column: "delivery_priority"   # tune one threshold per level of this column
+per_segment_min_positives: 30                   # tiers with fewer late cases fall back to global thr
+per_segment_threshold: true                     # set true to apply per-tier thresholds WITHOUT the CLI flag
+
+# --- interpretability ---
+perm_repeats: 5
+perm_sample: 10000
+shap_sample: 2000
+run_shap: true
+
+# --- risk x impact weighting (client importance, priority, parcel value) ---
+impact_weights: [0.4, 0.4, 0.2]
+
+# --- candidate models + randomized-search grids (edit to experiment) ---
+models:
+  logreg:
+    param_grid:
+      clf__C: [0.01, 0.03, 0.1, 0.3, 1.0, 3.0]
+  random_forest:
+    param_grid:
+      clf__n_estimators: [200, 400]
+      clf__max_depth: [null, 12, 20, 30]
+      clf__min_samples_leaf: [1, 5, 20]
+      clf__max_features: ["sqrt", 0.5]
+  hist_gbm:
+    param_grid:
+      clf__learning_rate: [0.03, 0.05, 0.1, 0.2]
+      clf__max_iter: [200, 400]
+      clf__max_leaf_nodes: [31, 63]
+      clf__l2_regularization: [0.0, 1.0]
+      clf__min_samples_leaf: [20, 50]

@@ -1,0 +1,11 @@
+{
+  "model": "hist_gbm",
+  "best_params": {
+    "clf__min_samples_leaf": 20,
+    "clf__max_leaf_nodes": 31,
+    "clf__max_iter": 400,
+    "clf__learning_rate": 0.05,
+    "clf__l2_regularization": 1.0
+  },
+  "best_cv_pr_auc": 0.25857474363438643
+}

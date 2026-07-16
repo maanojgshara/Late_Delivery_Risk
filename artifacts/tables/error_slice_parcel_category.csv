@@ -1,0 +1,5 @@
+parcel_category,n,FN_rate,FP_rate,error_rate
+standard,22251,0.6469,0.1212,0.1689
+fragile,4043,0.4875,0.2216,0.2558
+oversized,2498,0.3234,0.4019,0.3871
+refrigerated,1208,0.2376,0.4978,0.4371

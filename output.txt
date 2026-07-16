@@ -1,0 +1,215 @@
+[main] starting pipeline  (imports OK)...
+16:45:29 | INFO | Pipeline start | artifacts -> artifacts | models -> models
+>>>>>>>>>>>> Ingesting data... >>>>>>>>>>>>
+16:45:29 | INFO | Database not found locally; downloading from https://techassessment.blob.core.windows.net/aiap24-assessment-data/delivery.db
+16:45:31 | INFO | Loaded tables ['deliveries', 'feedback'] from data/delivery.db
+========= Data ingested =========
+
+>>>>>>>>>>>> Cleaning data... >>>>>>>>>>>>
+========= Data cleaned =========
+
+>>>>>>>>>>>> Engineering features... >>>>>>>>>>>>
+========= Features engineered =========
+
+>>>>>>>>>>>> Making X and y... >>>>>>>>>>>>
+========= X and y made =========
+
+>>>>>>>>>>>> Logging features... >>>>>>>>>>>>
+16:45:32 | INFO | Processed 150,000 rows | 29 features | positive_rate=0.1097
+16:45:32 | INFO | saved table  -> artifacts\tables\feature_inventory.csv
+========= Features logged =========
+
+>>>>>>>>>>>> Splitting data... >>>>>>>>>>>>
+16:45:32 | INFO | Split -> train=120,000 test=30,000 | positive_rate=0.1097
+16:45:32 | INFO | saved table  -> artifacts\tables\split_report.csv
+16:45:32 | INFO | saved figure -> artifacts\figures\class_balance.png
+========= Data split =========
+
+>>>>>>>>>>>> Checking multicollinearity... >>>>>>>>>>>>
+16:45:33 | INFO | saved table  -> artifacts\tables\vif.csv
+16:45:33 | INFO | saved table  -> artifacts\tables\spearman_corr.csv
+16:45:33 | INFO | saved table  -> artifacts\tables\high_corr_pairs.csv
+16:45:33 | INFO | Multicollinearity -> LINEAR_DROP=['driver_experience_months', 'exp_per_stop'] | linear keeps 12, tree keeps 14
+16:45:34 | INFO | saved figure -> artifacts\figures\spearman_heatmap.png
+16:45:34 | INFO | saved figure -> artifacts\figures\vif_bar.png
+========= Multicollinearity checked =========
+
+>>>>>>>>>>>> Building candidate models... >>>>>>>>>>>>
+========= Candidate models built =========
+
+>>>>>>>>>>>> Running CV baseline... >>>>>>>>>>>>
+logreg CV:   0%|          | 0/5 [00:00<?, ?it/s]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg CV:  20%|##        | 1/5 [00:00<00:02,  1.64it/s]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg CV:  40%|####      | 2/5 [00:01<00:01,  1.66it/s]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg CV:  60%|######    | 3/5 [00:01<00:01,  1.65it/s]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg CV:  80%|########  | 4/5 [00:02<00:00,  1.68it/s]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg CV: 100%|##########| 5/5 [00:02<00:00,  1.70it/s]logreg CV: 100%|##########| 5/5 [00:02<00:00,  1.68it/s]
+16:45:37 | INFO | [CV baseline] logreg: PR-AUC=0.2551 recall=0.659
+random_forest CV:   0%|          | 0/5 [00:00<?, ?it/s]random_forest CV:  20%|##        | 1/5 [00:11<00:46, 11.74s/it]random_forest CV:  40%|####      | 2/5 [00:23<00:35, 11.99s/it]random_forest CV:  60%|######    | 3/5 [00:35<00:23, 11.86s/it]random_forest CV:  80%|########  | 4/5 [00:47<00:11, 11.92s/it]random_forest CV: 100%|##########| 5/5 [00:59<00:00, 11.97s/it]random_forest CV: 100%|##########| 5/5 [00:59<00:00, 11.93s/it]
+16:46:37 | INFO | [CV baseline] random_forest: PR-AUC=0.2321 recall=0.010
+hist_gbm CV:   0%|          | 0/5 [00:00<?, ?it/s]hist_gbm CV:  20%|##        | 1/5 [00:00<00:03,  1.01it/s]hist_gbm CV:  40%|####      | 2/5 [00:01<00:02,  1.05it/s]hist_gbm CV:  60%|######    | 3/5 [00:02<00:01,  1.06it/s]hist_gbm CV:  80%|########  | 4/5 [00:03<00:00,  1.06it/s]hist_gbm CV: 100%|##########| 5/5 [00:04<00:00,  1.04it/s]hist_gbm CV: 100%|##########| 5/5 [00:04<00:00,  1.04it/s]
+16:46:41 | INFO | [CV baseline] hist_gbm: PR-AUC=0.2585 recall=0.684
+16:46:41 | INFO | saved table  -> artifacts\tables\cv_baseline_metrics.csv
+16:46:41 | INFO | saved figure -> artifacts\figures\cv_pr_auc.png
+========= CV baseline run =========
+
+>>>>>>>>>>>> Tuning models... >>>>>>>>>>>>
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\model_selection\_search.py:317: UserWarning: The total space of parameters 6 is smaller than n_iter=20. Running 6 iterations. For exhaustive searches, use GridSearchCV.
+  warnings.warn(
+logreg tuning:   0%|          | 0/6 [00:00<?, ?it/s]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg tuning:  17%|#6        | 1/6 [00:02<00:10,  2.09s/it]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg tuning:  33%|###3      | 2/6 [00:03<00:07,  1.87s/it]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg tuning:  50%|#####     | 3/6 [00:04<00:04,  1.52s/it]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg tuning:  67%|######6   | 4/6 [00:06<00:02,  1.38s/it]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg tuning:  83%|########3 | 5/6 [00:07<00:01,  1.30s/it]C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+logreg tuning: 100%|##########| 6/6 [00:08<00:00,  1.23s/it]logreg tuning: 100%|##########| 6/6 [00:08<00:00,  1.39s/it]
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+16:46:51 | INFO | saved model  -> models\logreg\tuned_logreg.joblib
+16:46:51 | INFO | saved table  -> artifacts\tables\logreg\trials_logreg.csv
+16:46:51 | INFO | tracked run  -> artifacts\runs\logreg\best_logreg.json
+16:46:51 | INFO | [tuned] logreg: PR-AUC=0.2550 params={'clf__C': 0.01}
+random_forest tuning:   0%|          | 0/20 [00:00<?, ?it/s]random_forest tuning:   5%|5         | 1/20 [00:16<05:10, 16.33s/it]random_forest tuning:  10%|#         | 2/20 [00:24<03:26, 11.45s/it]random_forest tuning:  15%|#5        | 3/20 [00:33<02:53, 10.21s/it]random_forest tuning:  20%|##        | 4/20 [01:18<06:26, 24.13s/it]random_forest tuning:  25%|##5       | 5/20 [01:27<04:37, 18.50s/it]random_forest tuning:  30%|###       | 6/20 [01:44<04:13, 18.11s/it]random_forest tuning:  35%|###5      | 7/20 [01:51<03:06, 14.38s/it]random_forest tuning:  40%|####      | 8/20 [02:24<04:04, 20.35s/it]random_forest tuning:  45%|####5     | 9/20 [02:31<02:58, 16.27s/it]random_forest tuning:  50%|#####     | 10/20 [02:47<02:43, 16.32s/it]random_forest tuning:  55%|#####5    | 11/20 [03:09<02:41, 17.89s/it]random_forest tuning:  60%|######    | 12/20 [03:25<02:17, 17.23s/it]random_forest tuning:  65%|######5   | 13/20 [03:47<02:11, 18.76s/it]random_forest tuning:  70%|#######   | 14/20 [04:02<01:46, 17.76s/it]random_forest tuning:  75%|#######5  | 15/20 [04:42<02:02, 24.46s/it]random_forest tuning:  80%|########  | 16/20 [04:55<01:24, 21.00s/it]random_forest tuning:  85%|########5 | 17/20 [05:11<00:58, 19.42s/it]random_forest tuning:  90%|######### | 18/20 [05:55<00:53, 26.91s/it]random_forest tuning:  95%|#########5| 19/20 [06:09<00:22, 22.89s/it]random_forest tuning: 100%|##########| 20/20 [06:52<00:00, 29.06s/it]random_forest tuning: 100%|##########| 20/20 [06:52<00:00, 20.65s/it]
+16:53:52 | INFO | saved model  -> models\random_forest\tuned_random_forest.joblib
+16:53:52 | INFO | saved table  -> artifacts\tables\random_forest\trials_random_forest.csv
+16:53:52 | INFO | tracked run  -> artifacts\runs\random_forest\best_random_forest.json
+16:53:52 | INFO | [tuned] random_forest: PR-AUC=0.2544 params={'clf__n_estimators': 200, 'clf__min_samples_leaf': 20, 'clf__max_features': 'sqrt', 'clf__max_depth': 30}
+hist_gbm tuning:   0%|          | 0/20 [00:00<?, ?it/s]hist_gbm tuning:   5%|5         | 1/20 [00:02<00:39,  2.05s/it]hist_gbm tuning:  10%|#         | 2/20 [00:03<00:32,  1.81s/it]hist_gbm tuning:  15%|#5        | 3/20 [00:08<00:55,  3.27s/it]hist_gbm tuning:  20%|##        | 4/20 [00:12<00:54,  3.39s/it]hist_gbm tuning:  25%|##5       | 5/20 [00:17<01:00,  4.06s/it]hist_gbm tuning:  30%|###       | 6/20 [00:23<01:03,  4.56s/it]hist_gbm tuning:  35%|###5      | 7/20 [00:25<00:48,  3.77s/it]hist_gbm tuning:  40%|####      | 8/20 [00:28<00:44,  3.69s/it]hist_gbm tuning:  45%|####5     | 9/20 [00:30<00:33,  3.02s/it]hist_gbm tuning:  50%|#####     | 10/20 [00:31<00:25,  2.60s/it]hist_gbm tuning:  55%|#####5    | 11/20 [00:33<00:20,  2.30s/it]hist_gbm tuning:  60%|######    | 12/20 [00:36<00:20,  2.59s/it]hist_gbm tuning:  65%|######5   | 13/20 [00:40<00:19,  2.86s/it]hist_gbm tuning:  70%|#######   | 14/20 [00:43<00:17,  2.96s/it]hist_gbm tuning:  75%|#######5  | 15/20 [00:48<00:17,  3.46s/it]hist_gbm tuning:  80%|########  | 16/20 [00:50<00:12,  3.08s/it]hist_gbm tuning:  85%|########5 | 17/20 [00:54<00:10,  3.55s/it]hist_gbm tuning:  90%|######### | 18/20 [00:57<00:06,  3.14s/it]hist_gbm tuning:  95%|#########5| 19/20 [00:59<00:02,  2.85s/it]hist_gbm tuning: 100%|##########| 20/20 [01:02<00:00,  3.11s/it]hist_gbm tuning: 100%|##########| 20/20 [01:02<00:00,  3.15s/it]
+16:54:57 | INFO | saved model  -> models\hist_gbm\tuned_hist_gbm.joblib
+16:54:57 | INFO | saved table  -> artifacts\tables\hist_gbm\trials_hist_gbm.csv
+16:54:57 | INFO | tracked run  -> artifacts\runs\hist_gbm\best_hist_gbm.json
+16:54:57 | INFO | [tuned] hist_gbm: PR-AUC=0.2586 params={'clf__min_samples_leaf': 20, 'clf__max_leaf_nodes': 31, 'clf__max_iter': 400, 'clf__learning_rate': 0.05, 'clf__l2_regularization': 1.0}
+16:54:57 | INFO | saved table  -> artifacts\tables\tuning_summary.csv
+16:54:57 | INFO | saved figure -> artifacts\figures\tuned_pr_auc.png
+========= Models tuned =========
+
+>>>>>>>>>>>> Calibrating models... >>>>>>>>>>>>
+C:\Users\maano\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sklearn\preprocessing\_discretization.py:296: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+16:54:57 | INFO | saved model  -> models\logreg\calibrated_logreg.joblib
+16:55:04 | INFO | saved model  -> models\random_forest\calibrated_random_forest.joblib
+16:55:06 | INFO | saved model  -> models\hist_gbm\calibrated_hist_gbm.joblib
+16:55:06 | INFO | saved figure -> artifacts\figures\reliability_curves.png
+16:55:06 | INFO | saved table  -> artifacts\tables\calibration_thresholds.csv
+16:55:06 | INFO | Calibration done | thresholds={'logreg': 0.15000000000000002, 'random_forest': 0.16, 'hist_gbm': 0.17}
+========= Models calibrated =========
+
+>>>>>>>>>>>> Evaluating on test... >>>>>>>>>>>>
+Evaluation:   0%|          | 0/3 [00:00<?, ?it/s]16:55:06 | INFO | [TEST] logreg: PR-AUC=0.2513 recall=0.488 precision=0.244 f1=0.326 brier=0.0901
+16:55:06 | INFO | [TEST] random_forest: PR-AUC=0.2520 recall=0.450 precision=0.257 f1=0.327 brier=0.0902
+Evaluation:  67%|######6   | 2/3 [00:00<00:00,  6.82it/s]16:55:07 | INFO | [TEST] hist_gbm: PR-AUC=0.2536 recall=0.460 precision=0.251 f1=0.325 brier=0.0898
+Evaluation: 100%|##########| 3/3 [00:00<00:00,  6.59it/s]Evaluation: 100%|##########| 3/3 [00:00<00:00,  6.64it/s]
+16:55:07 | INFO | saved table  -> artifacts\tables\test_metrics.csv
+16:55:07 | INFO | saved figure -> artifacts\figures\test_confusion_matrices.png
+16:55:07 | INFO | saved figure -> artifacts\figures\roc_pr_curves.png
+========= Models evaluated on test =========
+
+>>>>>>>>>>>> Calculating feature importance... >>>>>>>>>>>>
+logreg perm:   0%|          | 0/29 [00:00<?, ?it/s]logreg perm:   7%|6         | 2/29 [00:00<00:01, 13.50it/s]logreg perm:  14%|#3        | 4/29 [00:00<00:01, 13.64it/s]logreg perm:  21%|##        | 6/29 [00:00<00:01, 13.43it/s]logreg perm:  28%|##7       | 8/29 [00:00<00:01, 13.48it/s]logreg perm:  34%|###4      | 10/29 [00:00<00:01, 13.20it/s]logreg perm:  41%|####1     | 12/29 [00:00<00:01, 12.78it/s]logreg perm:  48%|####8     | 14/29 [00:01<00:01, 11.56it/s]logreg perm:  55%|#####5    | 16/29 [00:01<00:01, 11.86it/s]logreg perm:  62%|######2   | 18/29 [00:01<00:00, 12.30it/s]logreg perm:  69%|######8   | 20/29 [00:01<00:00, 11.67it/s]logreg perm:  76%|#######5  | 22/29 [00:01<00:00, 12.47it/s]logreg perm:  83%|########2 | 24/29 [00:01<00:00, 12.75it/s]logreg perm:  90%|########9 | 26/29 [00:02<00:00, 12.30it/s]logreg perm:  97%|#########6| 28/29 [00:02<00:00, 12.53it/s]logreg perm: 100%|##########| 29/29 [00:02<00:00, 12.51it/s]
+random_forest perm:   0%|          | 0/29 [00:00<?, ?it/s]random_forest perm:   3%|3         | 1/29 [00:00<00:10,  2.58it/s]random_forest perm:   7%|6         | 2/29 [00:00<00:10,  2.59it/s]random_forest perm:  10%|#         | 3/29 [00:01<00:10,  2.58it/s]random_forest perm:  14%|#3        | 4/29 [00:01<00:09,  2.57it/s]random_forest perm:  17%|#7        | 5/29 [00:01<00:09,  2.57it/s]random_forest perm:  21%|##        | 6/29 [00:02<00:08,  2.57it/s]random_forest perm:  24%|##4       | 7/29 [00:02<00:08,  2.55it/s]random_forest perm:  28%|##7       | 8/29 [00:03<00:08,  2.55it/s]random_forest perm:  31%|###1      | 9/29 [00:03<00:07,  2.54it/s]random_forest perm:  34%|###4      | 10/29 [00:03<00:07,  2.53it/s]random_forest perm:  38%|###7      | 11/29 [00:04<00:07,  2.53it/s]random_forest perm:  41%|####1     | 12/29 [00:04<00:06,  2.57it/s]random_forest perm:  45%|####4     | 13/29 [00:05<00:06,  2.56it/s]random_forest perm:  48%|####8     | 14/29 [00:05<00:05,  2.59it/s]random_forest perm:  52%|#####1    | 15/29 [00:05<00:05,  2.56it/s]random_forest perm:  55%|#####5    | 16/29 [00:06<00:05,  2.57it/s]random_forest perm:  59%|#####8    | 17/29 [00:06<00:04,  2.59it/s]random_forest perm:  62%|######2   | 18/29 [00:07<00:04,  2.58it/s]random_forest perm:  66%|######5   | 19/29 [00:07<00:03,  2.58it/s]random_forest perm:  69%|######8   | 20/29 [00:07<00:03,  2.56it/s]random_forest perm:  72%|#######2  | 21/29 [00:08<00:03,  2.56it/s]random_forest perm:  76%|#######5  | 22/29 [00:08<00:02,  2.56it/s]random_forest perm:  79%|#######9  | 23/29 [00:08<00:02,  2.53it/s]random_forest perm:  83%|########2 | 24/29 [00:09<00:01,  2.51it/s]random_forest perm:  86%|########6 | 25/29 [00:09<00:01,  2.52it/s]random_forest perm:  90%|########9 | 26/29 [00:10<00:01,  2.52it/s]random_forest perm:  93%|#########3| 27/29 [00:10<00:00,  2.52it/s]random_forest perm:  97%|#########6| 28/29 [00:10<00:00,  2.53it/s]random_forest perm: 100%|##########| 29/29 [00:11<00:00,  2.53it/s]random_forest perm: 100%|##########| 29/29 [00:11<00:00,  2.55it/s]
+hist_gbm perm:   0%|          | 0/29 [00:00<?, ?it/s]hist_gbm perm:   3%|3         | 1/29 [00:00<00:04,  6.10it/s]hist_gbm perm:   7%|6         | 2/29 [00:00<00:04,  5.87it/s]hist_gbm perm:  10%|#         | 3/29 [00:00<00:04,  5.72it/s]hist_gbm perm:  14%|#3        | 4/29 [00:00<00:04,  5.53it/s]hist_gbm perm:  17%|#7        | 5/29 [00:00<00:04,  5.52it/s]hist_gbm perm:  21%|##        | 6/29 [00:01<00:04,  5.56it/s]hist_gbm perm:  24%|##4       | 7/29 [00:01<00:03,  5.58it/s]hist_gbm perm:  28%|##7       | 8/29 [00:01<00:03,  5.56it/s]hist_gbm perm:  31%|###1      | 9/29 [00:01<00:03,  5.55it/s]hist_gbm perm:  34%|###4      | 10/29 [00:01<00:03,  5.48it/s]hist_gbm perm:  38%|###7      | 11/29 [00:01<00:03,  5.46it/s]hist_gbm perm:  41%|####1     | 12/29 [00:02<00:03,  5.50it/s]hist_gbm perm:  45%|####4     | 13/29 [00:02<00:02,  5.47it/s]hist_gbm perm:  48%|####8     | 14/29 [00:02<00:02,  5.47it/s]hist_gbm perm:  52%|#####1    | 15/29 [00:02<00:02,  5.45it/s]hist_gbm perm:  55%|#####5    | 16/29 [00:02<00:02,  5.35it/s]hist_gbm perm:  59%|#####8    | 17/29 [00:03<00:02,  5.39it/s]hist_gbm perm:  62%|######2   | 18/29 [00:03<00:02,  5.45it/s]hist_gbm perm:  66%|######5   | 19/29 [00:03<00:01,  5.46it/s]hist_gbm perm:  69%|######8   | 20/29 [00:03<00:01,  5.48it/s]hist_gbm perm:  72%|#######2  | 21/29 [00:03<00:01,  5.32it/s]hist_gbm perm:  76%|#######5  | 22/29 [00:04<00:01,  5.33it/s]hist_gbm perm:  79%|#######9  | 23/29 [00:04<00:01,  5.38it/s]hist_gbm perm:  83%|########2 | 24/29 [00:04<00:00,  5.39it/s]hist_gbm perm:  86%|########6 | 25/29 [00:04<00:00,  5.33it/s]hist_gbm perm:  90%|########9 | 26/29 [00:04<00:00,  5.28it/s]hist_gbm perm:  93%|#########3| 27/29 [00:04<00:00,  5.25it/s]hist_gbm perm:  97%|#########6| 28/29 [00:05<00:00,  5.25it/s]hist_gbm perm: 100%|##########| 29/29 [00:05<00:00,  5.25it/s]hist_gbm perm: 100%|##########| 29/29 [00:05<00:00,  5.42it/s]
+16:55:26 | INFO | saved figure -> artifacts\figures\permutation_importance.png
+16:55:26 | INFO | saved table  -> artifacts\tables\feature_importance_merged.csv
+16:55:26 | INFO | Permutation importance done; top feature = route_load_per_exp
+========= Feature importance calculated =========
+
+>>>>>>>>>>>> Running SHAP... >>>>>>>>>>>>
+SHAP:   0%|          | 0/3 [00:00<?, ?it/s]16:55:27 | INFO | saved figure -> artifacts\figures\logreg\shap_logreg.png
+16:55:27 | INFO | saved table  -> artifacts\tables\logreg\shap_top_logreg.csv
+16:59:36 | INFO | saved figure -> artifacts\figures\random_forest\shap_random_forest.png
+16:59:36 | INFO | saved table  -> artifacts\tables\random_forest\shap_top_random_forest.csv
+SHAP:  67%|######6   | 2/3 [04:09<02:04, 124.79s/it]16:59:37 | INFO | saved figure -> artifacts\figures\hist_gbm\shap_hist_gbm.png
+16:59:37 | INFO | saved table  -> artifacts\tables\hist_gbm\shap_top_hist_gbm.csv
+SHAP: 100%|##########| 3/3 [04:10<00:00, 73.04s/it] SHAP: 100%|##########| 3/3 [04:10<00:00, 83.39s/it]
+16:59:37 | INFO | saved table  -> artifacts\tables\shap_merged.csv
+========= SHAP run =========
+
+========= SHAP calculated =========
+
+>>>>>>>>>>>> Selecting best model... >>>>>>>>>>>>
+16:59:37 | INFO | saved table  -> artifacts\tables\model_comparison.csv
+16:59:37 | INFO | saved figure -> artifacts\figures\model_comparison_bar.png
+16:59:37 | INFO | tracked run  -> artifacts\runs\model_selection.json
+16:59:37 | INFO | saved model  -> models\final_model.joblib
+========= Best model selected =========
+
+>>>>>>>>>>>> Running error analysis... >>>>>>>>>>>>
+16:59:37 | INFO | Best model by test PR-AUC = hist_gbm
+16:59:37 | INFO | saved table  -> artifacts\tables\misclassified.csv
+16:59:37 | INFO | saved table  -> artifacts\tables\error_slice_branch.csv
+16:59:37 | INFO | saved table  -> artifacts\tables\error_slice_parcel_category.csv
+16:59:37 | INFO | saved table  -> artifacts\tables\error_slice_delivery_priority.csv
+16:59:37 | INFO | saved table  -> artifacts\tables\error_slice_promised_service_tier.csv
+16:59:37 | INFO | saved table  -> artifacts\tables\top_failure_modes.csv
+========= Error analysis run =========
+
+>>>>>>>>>>>> Running bias analysis... >>>>>>>>>>>>
+16:59:37 | INFO | saved table  -> artifacts\tables\slice_metrics_branch.csv
+16:59:37 | INFO | [bias] branch: lowest recall group = central (0.255)
+16:59:37 | INFO | saved table  -> artifacts\tables\slice_metrics_parcel_category.csv
+16:59:37 | INFO | [bias] parcel_category: lowest recall group = standard (0.353)
+16:59:37 | INFO | saved table  -> artifacts\tables\slice_metrics_delivery_priority.csv
+16:59:37 | INFO | [bias] delivery_priority: lowest recall group = vip (0.067)
+16:59:37 | INFO | saved table  -> artifacts\tables\slice_metrics_promised_service_tier.csv
+16:59:37 | INFO | [bias] promised_service_tier: lowest recall group = 2_hour (0.173)
+16:59:37 | INFO | saved figure -> artifacts\figures\slice_metrics_heatmap.png
+========= Bias analysis run =========
+
+>>>>>>>> Running per-segment thresholds... >>>>>>>>
+16:59:37 | INFO | saved table  -> artifacts\tables\segment_threshold_comparison.csv
+16:59:37 | INFO | tracked run  -> artifacts\runs\segment_thresholds.json
+16:59:37 | INFO | saved figure -> artifacts\figures\segment_threshold_comparison.png
+16:59:37 | INFO | Per-segment thresholds (hist_gbm): {'standard': 0.17, 'express': 0.17, 'premium': 0.17, 'vip': 0.16}
+====== Per-segment thresholds run ======
+
+>>>>>>>> Running risk x impact scores... >>>>>>>>
+16:59:38 | INFO | saved table  -> artifacts\tables\risk_impact_scored.csv
+16:59:38 | INFO | saved table  -> artifacts\tables\top20_dispatch_queue.csv
+16:59:38 | INFO | Risk x impact scored 30,000 deliveries with model 'hist_gbm'
+16:59:38 | INFO | saved figure -> artifacts\figures\risk_impact.png
+====== Risk x impact scores run ======
+
+>>>>>>>> Generating final results report... >>>>>>>>
+16:59:38 | INFO | saved table  -> artifacts\tables\final_results.csv
+16:59:38 | INFO | saved figure -> artifacts\figures\final_results.png
+16:59:38 | INFO | Final results table saved (selected model: hist_gbm).
+====== Final results report generated ======
+
+16:59:38 | INFO | Pipeline complete in 848.9s (14.15 min).
+
+============ TOTAL PIPELINE TIME: 848.9 seconds (14.15 minutes) ============

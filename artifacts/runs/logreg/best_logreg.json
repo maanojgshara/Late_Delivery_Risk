@@ -1,0 +1,7 @@
+{
+  "model": "logreg",
+  "best_params": {
+    "clf__C": 0.01
+  },
+  "best_cv_pr_auc": 0.25504377910699727
+}
